@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include<iomanip>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <set>
+#include <map>
+#include <assert.h> 
+#include <stack>
+#include <list>
+#include <string>
+#include <functional>
+#include <unordered_set>
+#include <algorithm>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+
+ll gcd(ll a, ll b)
+{
+    if (b == 0)
+        return a;
+    return gcd(b, a % b);
+}
+ll lcm(ll a, ll b) {
+    return a * b / gcd(a, b);
+}
+
+bool prime(int n) {
+    if (n < 2)
+        return false;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0)
+            return false;
+    }
+    return true;
+}
+
+
+/* x^n % m = (x * x^n-1) % m;
+
+if n is odd ==> ((x % m) * (x^n-1 % m )) % m;
+
+if n is even ==>((x^n/2 % m) * (x^n/2 % m )) % m;
+*/
+
+
+ll bigmod(ll b, ll p, ll m) {   
+    if (p == 0) return 1;
+
+    if (p % 2 == 0) { 
+        ll val = bigmod(b, p / 2, m);   // (x ^ n/2 % m)
+        return (val * val) % m;     // ((x % m) * (x^n-1 % m )) % m;
+    }
+    else
+        return (b % m * bigmod(b, p - 1, m)) % m;   // ((x % m) * (x^n-1 % m )) % m;
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(NULL), cout.tie(NULL), cin.tie(NULL);
+    ll b, p, m;
+    while (cin >> b >> p >> m) {
+        cout << bigmod(b, p, m) << endl;
+    }
+    return 0;
+}
