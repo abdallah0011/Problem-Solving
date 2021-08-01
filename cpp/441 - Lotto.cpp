@@ -1,0 +1,129 @@
+#include <iostream>
+#include <vector>
+#include<iomanip>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <numeric>
+#include <set>
+#include <map>
+#include <assert.h> 
+#include <stack>
+#include <list>
+#include <string>
+#include <functional>
+#include <unordered_set>
+#include <algorithm>
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+const int INF = 0x3f3f3f3f;
+const int MAX = 1e5 + 7;
+
+
+ll gcd(ll a, ll b)
+{
+    if (b == 0)
+        return a;
+    return gcd(b, a % b);
+}
+ll lcm(ll a, ll b) {
+    return a * b / gcd(a, b);
+}
+
+bool prime(int n) {
+    if (n < 2)
+        return false;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0)
+            return false;
+    }
+    return true;
+}
+
+ll power(ll b, ll e) {
+    if (e == 0) return 1;
+    ll sq = power(b, e / 2);
+    sq *= sq;
+
+    if (e & 1)
+        sq *= b;
+
+    return sq;
+}
+
+ll ncr(ll n, ll r) {
+
+    ll ans = 1;
+
+    if (n - r < r)  // Since C(n, r) = C(n, n-r) as nCr = 0 wwhen n < r;
+        r = n - r;
+
+    // Calculate value of 
+    // [n * (n-1) *---* (n-k+1)] / [k * (k-1) *----* 1] 
+    for (ll i = 0; i < r; i++) {
+        ans *= n - i;
+        ans /= i + 1;
+    }
+
+    return ans;
+}
+
+int dx[] = { 0 ,0 ,-1 ,1 ,-1 ,1 ,-1 ,1 };
+int dy[] = { 1 ,-1 ,0 ,0 ,1 ,1 ,-1 ,-1 };
+
+int n;
+int arr[MAX], taken[MAX];
+vector<int> ans;
+
+void solve(int idx) {
+    
+    if (ans.size() == 6) {
+
+        for (int i = 0; i < 6; i++) {
+            cout << ans[i];
+            if (i < 5)
+                cout << " ";
+        }
+        cout << endl;
+        return;
+    }
+
+    for (int i = idx; i < n; i++) {
+
+        if (taken[i] == 0) {
+            
+            ans.push_back(arr[i]);
+            taken[i] = 1;
+
+            solve(i + 1);
+            
+            ans.pop_back();
+            taken[i] = 0;
+        }
+    }
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(NULL), cout.tie(NULL), cin.tie(NULL);
+    bool space = 0;
+
+    while (cin >> n && n) {
+        
+        if (space)
+            cout << "\n";
+        space = 1;
+
+        memset(arr, 0, sizeof arr);
+        memset(taken, 0, sizeof taken);
+        ans.clear();
+
+        for (int i = 0; i < n; i++)
+            cin >> arr[i];
+        
+        solve(0);
+    }
+
+    return 0;
+}
